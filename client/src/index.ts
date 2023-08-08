@@ -1,12 +1,16 @@
-import jayson from 'jayson';
+import axios from 'axios';
 
-// create a client
-const client = jayson.Client.http({
-  port: 3000
-});
-
-// invoke "add"
-client.request('add', [1, 1], function(err, response) {
-  if(err) throw err;
-  console.log(response.result); // 2
-});
+axios.post('http://localhost:3000/rpc', {
+    "jsonrpc": "2.0",
+    "method": "textDocument/didOpen",
+    "params": {
+        "textDocument": {
+        "uri": "file:///path/to/document.txt",
+        "languageId": "plaintext",
+        "version": 1,
+        "text": "Content of the document"
+        }
+    }
+}).then((res) => {
+    console.log(res.data)
+})

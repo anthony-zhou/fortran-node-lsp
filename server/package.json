@@ -4,7 +4,8 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "main": "tsc && node dist/index.js"
+    "main": "tsc && node dist/index.js",
+    "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"tsc && node dist/index.js || exit 1\""
   },
   "devDependencies": {
     "@types/node": "^18.14.4",
@@ -14,9 +15,10 @@
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
     "eslint-plugin-import": "^2.25.2",
+    "nodemon": "^3.0.1",
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "jayson": "^4.1.0"
+    "express": "^4.18.2"
   }
 }
