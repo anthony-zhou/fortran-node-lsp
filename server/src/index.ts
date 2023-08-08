@@ -19,7 +19,7 @@ app.post('/rpc', (req, res) => {
   const child = spawn('fortls');
 
   // Serialize the JSON RPC request
-  const rpcRequest = JSON.stringify(req.body).replace(/\n/g, '\r\n');
+  const rpcRequest = JSON.stringify(req.body);
 
   // Write the JSON RPC request to the stdin of the script
   const request = 'Content-Length:100000\r\n\r\n' + rpcRequest;
