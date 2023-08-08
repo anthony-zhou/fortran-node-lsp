@@ -12,11 +12,12 @@ app.use(express.json());
 //     return res.status(415).send('Unsupported Media Type');
 //   }
 // });
+const child = spawn('fortls', ['--source_dirs', '/Users/anthony/Downloads/regex-fortran-master', '--incl_suffixes', '.f90', '--notify_init']);
 
 // POST endpoint to handle JSON RPC requests
 app.post('/rpc', (req, res) => {
   // Spawn the command-line script (replace 'your-script.sh' with the actual script path)
-  const child = spawn('fortls');
+
 
   // Serialize the JSON RPC request
   const rpcRequest = JSON.stringify(req.body);
@@ -44,7 +45,8 @@ app.post('/rpc', (req, res) => {
   });
 
   // Close the stdin stream when you're done
-  child.stdin.end();
+  child.stdin.write('\r\n')
+//   child.stdin.flu();
 });
 
 // Start the Express server
