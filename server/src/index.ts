@@ -15,7 +15,7 @@ app.use(express.json());
 
 // POST endpoint to handle JSON RPC requests
 app.post('/rpc', (req, res) => {
-  const child = spawn('fortls', ['--incl_suffixes', '.f90', '--incremental_sync']);
+  const child = spawn('fortls', ['--incl_suffixes', '.f90', '--enable_code_actions', '--incremental_sync']);
 
   // Serialize the JSON RPC request
   const initializeRequest = JSON.stringify({
@@ -56,10 +56,12 @@ app.post('/rpc', (req, res) => {
 
   // Handle exit and send response
   child.on('exit', () => {
-    res.header('Content-Type', 'application/vscode-jsonrpc; charset=utf8');
-    res.header('Content-Length', Buffer.byteLength(output, 'utf8').toString());
+    // res.header('Content-Type', 'application/vscode-jsonrpc; charset=utf8');
+    // res.header('Content-Length', Buffer.byteLength(output, 'utf8').toString());
     res.send(output);
   });
+
+  
 
   // Close the stdin stream when you're done
   child.stdin.write('\r\n\r\n');

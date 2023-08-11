@@ -42,15 +42,15 @@ const readFileAsString = (path) => fs.readFileSync(path).toString()
 axios.post('http://localhost:3000/rpc', {
     "jsonrpc": "2.0",
     "id" : 1,
-    "method": "textDocument/documentSymbol",
+    "method": "textDocument/definition",
     "params": {
         "textDocument": {
             "uri": "file:///Users/anthony/Downloads/regex-fortran-master/regex.f90"
         },
-        // "position": {
-        //     "line": 71,
-        //     "character": 19
-        // }
+        "position": {
+            "line": 220 - 1,
+            "character": 24 - 1
+        }
     }
 }).then((res) => {
     console.log("RESPONSE")
@@ -65,6 +65,4 @@ axios.post('http://localhost:3000/rpc', {
             console.log(JSON.stringify(obj, null, 2))
         }
     }
-
-    
 })
