@@ -1,5 +1,5 @@
-const express = require('express');
-const { spawn } = require('child_process');
+import express from "express";
+import { spawn } from "child_process";
 const app = express();
 const port = 3000;
 
@@ -12,25 +12,42 @@ app.use(express.json());
 //     return res.status(415).send('Unsupported Media Type');
 //   }
 // });
-const child = spawn('fortls', ['--source_dirs', '/Users/anthony/Downloads/regex-fortran-master', '--incl_suffixes', '.f90', '--notify_init']);
 
 // POST endpoint to handle JSON RPC requests
 app.post('/rpc', (req, res) => {
-  // Spawn the command-line script (replace 'your-script.sh' with the actual script path)
-
+  const child = spawn('fortls', ['--incl_suffixes', '.f90', '--incremental_sync']);
 
   // Serialize the JSON RPC request
+  const initializeRequest = JSON.stringify({
+    jsonrpc: "2.0",
+    "id" : 1,
+    "method": "initialize",
+    "params": {
+        'rootPath': 'file:///Users/anthony/Downloads/regex-fortran-master'
+    }
+  });
+  const r = `Content-Length: ${Buffer.byteLength(initializeRequest)}\r\nContent-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n` + initializeRequest;
+
+
   const rpcRequest = JSON.stringify(req.body);
 
   // Write the JSON RPC request to the stdin of the script
-  const request = 'Content-Length:100000\r\n\r\n' + rpcRequest;
-  child.stdin.write(request);
+  const contentLength = Buffer.byteLength(rpcRequest);
+  const request = `Content-Length: ${contentLength}\r\nContent-Type: application/vscode-jsonrpc; charset=utf8\r\n\r\n` + rpcRequest;
+
+  const rec = r + request;
+  console.log(rec)
+
+  child.stdin.write(rec);
 
   // Collect data from stdout
   let output = '';
+
   child.stdout.on('data', (data) => {
     output += data.toString();
+    // console.log(output)
   });
+
 
   // Handle errors
   child.stderr.on('data', (data) => {
@@ -40,12 +57,13 @@ app.post('/rpc', (req, res) => {
   // Handle exit and send response
   child.on('exit', () => {
     res.header('Content-Type', 'application/vscode-jsonrpc; charset=utf8');
-    res.header('Content-Length', Buffer.byteLength(output, 'utf8'));
+    res.header('Content-Length', Buffer.byteLength(output, 'utf8').toString());
     res.send(output);
   });
 
   // Close the stdin stream when you're done
-  child.stdin.write('\r\n')
+  child.stdin.write('\r\n\r\n');
+  child.stdin.end();
 //   child.stdin.flu();
 });
 
