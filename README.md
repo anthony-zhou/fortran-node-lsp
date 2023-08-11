@@ -10,8 +10,4 @@ LSP messages are just a specific kind of JSON RPC message. RPC stands for remote
 
 ## Server
 
-The server passes messages through to the `fortls` command line language server, through stdio. # fortran-node-lsp
-
-## Next Steps
-
-TODO: modify the Express server so that `fortls` is a long-running process. This way we can initialize the workspace before sending RPC calls to request information about documents. 
+The server passes messages through to the `fortls` command line language server, through stdio.
