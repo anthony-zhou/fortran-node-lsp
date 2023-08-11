@@ -61,12 +61,9 @@ app.post('/rpc', (req, res) => {
     res.send(output);
   });
 
-  
 
-  // Close the stdin stream when you're done
-  child.stdin.write('\r\n\r\n');
+
   child.stdin.end();
-//   child.stdin.flu();
 });
 
 // Start the Express server
